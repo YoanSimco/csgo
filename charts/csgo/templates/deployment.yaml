@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: csgo-server
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        env:
+        - name: SRCDS_HOSTNAME
+          value: {{ .Values.application.name }}
+        - name: SRCDS_STARTMAP
+          value: {{ .Values.application.startmap }}
+        - name: SRCDS_GAMETYPE
+          value: {{ .Values.application.game.type | quote }}
+        - name: SRCDS_GAMEMODE
+          value: {{ .Values.application.game.mode | quote }}
+        - name: SRCDS_MAXPLAYERS
+          value: {{ .Values.application.maxplayers | quote }}
+        - name: SRCDS_TICKRATE
+          value: {{ .Values.application.tickrate | quote }}
+        - name: SRCDS_FPSMAX
+          value: {{ .Values.application.fpsmax | quote }}
+        - name: SRCDS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}
+              key: srcds-token
+        - name: SRCDS_RCONPW
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}
+              key: srcds-rconpw
+        - name: SRCDS_PW
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}
+              key: srcds-pw
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        ports:
+        - containerPort: 27015
+        - containerPort: 27020

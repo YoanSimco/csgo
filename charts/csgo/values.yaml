@@ -1,0 +1,32 @@
+image:
+  repository: cm2network/csgo
+  tag: latest
+
+application:
+  name: "My CSGO server"
+  startmap: de_dust2
+  # See https://developer.valvesoftware.com/wiki/Counter-Strike:_Global_Offensive/Game_Modes
+  game:
+    type: 0
+    mode: 1
+  maxplayers: 10
+  tickrate: 128
+  fpsmax: 300
+  secrets:
+    # See https://steamcommunity.com/dev/managegameservers
+    srcdstoken:
+    srcdsrconpw: changeme
+    srcdspw: changeme
+
+resources:
+  requests:
+    cpu: 1000m
+    memory: 1024Mi
+  limits:
+    cpu: 4000m
+    memory: 8192Mi
+
+service:
+  nodeport:
+    srcds: 30015
+    srcdstv: 30020

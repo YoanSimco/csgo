@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  type: NodePort
+  selector:
+    app: {{ .Release.Name }}
+  ports:
+    - name: srcds-tcp
+      protocol: TCP
+      port: 27015
+      targetPort: 27015
+      nodePort: {{ .Values.service.nodeport.srcds }}
+    - name: srcds-udp
+      protocol: UDP
+      port: 27015
+      targetPort: 27015
+      nodePort: {{ .Values.service.nodeport.srcds }}
+    - name: srcds-tv
+      protocol: UDP
+      port: 27020
+      targetPort: 27020
+      nodePort: {{ .Values.service.nodeport.srcdstv }}
